@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cafetería</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background-color: #fff0f5; }
+    #menu-toggle {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: #f8bbd0;
+      border: none;
+      padding: 10px;
+      font-size: 20px;
+      cursor: pointer;
+      border-radius: 6px;
+      z-index: 1001;
+    }
+    header {
+      width: 200px;
+      background: #f8bbd0;
+      color: #4e342e;
+      padding-top: 60px;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: -200px;
+      transition: left 0.3s;
+      z-index: 1000;
+    }
+    header.show {
+      left: 0;
+    }
+    nav a {
+      display: block;
+      margin: 10px;
+      padding: 10px;
+      background: #ffe4e1;
+      border: 1px solid #f48fb1;
+      border-radius: 8px;
+      color: #4e342e;
+      text-decoration: none;
+      cursor: pointer;
+      font-weight: bold;
+      text-align: center;
+    }
+    main {
+      margin-left: 0;
+      padding: 20px;
+      transition: margin-left 0.3s;
+    }
+    header.show ~ main {
+      margin-left: 200px;
+    }
+    section {
+      display: none;
+      margin-bottom: 40px;
+      background-color: #fff;
+      border: 2px solid #f8bbd0;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+    section.active {
+      display: block;
+    }
+    section h2 {
+      text-align: center;
+      margin-top: 0;
+      padding: 10px;
+      background-color: #f8bbd0;
+      border-radius: 8px;
+      border: 2px solid #f48fb1;
+    }
+    .logo-seccion {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #f8bbd0;
+    }
+    .seccion-content {
+      margin-top: 80px;
+    }
+    .producto {
+      border: 1px solid #f8bbd0;
+      padding: 10px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      background-color: #ffe4e1;
+      border-radius: 12px;
+    }
+    .producto img {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      margin-right: 10px;
+      border-radius: 8px;
+    }
+    .carrito-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      background-color: #e1bee7;
+      padding: 10px;
+      border-radius: 10px;
+    }
+    .carrito-item button {
+      margin: 0 5px;
+      background-color: #ce93d8;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 4px 10px;
+      cursor: pointer;
+    }
+    .total {
+      font-weight: bold;
+      font-size: 1.2em;
+      margin-top: 10px;
+      color: #6d4c41;
+    }
+    button {
+      background-color: #f48fb1;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #f06292;
+    }
+    .carousel img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+    footer {
+      background: #f8bbd0;
+      color: #4e342e;
+      text-align: center;
+      padding: 10px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+    .nosotros-content {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .nosotros-content img {
+      width: 100%;
+      max-width: 600px;
+      border-radius: 12px;
+    }
+    .nosotros-text {
+      flex: 1;
+      min-width: 250px;
+    }
+    #mural {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #ffe4e1;
+      border-radius: 12px;
+    }
+    #mural h3 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .mensaje-item {
+      background-color: #f8bbd0;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 8px;
+    }
+    .contact-form textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #f48fb1;
+      margin-bottom: 10px;
+      resize: vertical;
+    }
+    #comentario-input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #f48fb1;
+      margin-bottom: 10px;
+      resize: none;
+      position: relative;
+    }
+    #comentario-input:focus {
+      outline: none;
+      border-color: #f06292;
+    }
+  </style>
+</head>
+<body>
+  <button id="menu-toggle">☰</button>
+
+  <header id="sidebar">
+    <nav>
+      <a onclick="mostrarSeccion('inicio')">Inicio</a>
+      <a onclick="mostrarSeccion('productos')">Productos</a>
+      <a onclick="mostrarSeccion('nosotros')">Nosotros</a>
+      <a onclick="mostrarSeccion('contacto')">Contacto</a>
+      <a onclick="mostrarSeccion('carrito')">Carrito</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="inicio" class="active">
+      <img src=logo.png alt="Logo" class="logo-seccion">
+      <div class="seccion-content">
+        <h2>Inicio</h2>
+        <p>Bienvenido a nuestra tienda virtual.</p>
+        <p>Muchas gracias por escogernos a nosotros,disfruta de nuestra increible cantidad de postres super deliciosos.</p>
+        <p>Al momento de realizar la compra de su producto,para la confirmacion de los postres que desea se abrira automaticamente un chat de WhatsApp con la informacion de todo lo que selecciono en su compra.</p>
+        
+        <div style="text-align: center;">
+          <img src="gg.png" alt="kwai">
+        </div>
+        <h2>Juega aquí</h2>
+        <div style="display: flex; justify-content: center; padding: 0; margin: 0;">
+          <div style="width: 720px; height: 1280px; transform: scale(0.45); transform-origin: top center;">
+            <iframe 
+              src="juego/index.html" 
+              width="720" 
+              height="1280" 
+              style="border: none;">
+            </iframe>
+          </div>
+        </div>
+    </section>
+
+    <section id="productos">
+      <img src=logo.png alt="Logo" class="logo-seccion">
+      <div class="seccion-content">
+        <h2>Productos</h2>
+        <div class="producto">
+          <img src=mora.jpg alt="Producto">
+          <div>
+            <h3>mora</h3>
+            <p>Precio: $12500</p>
+            <!-- Aquí puedes modificar el precio del producto si es necesario -->
+            <button onclick="agregarAlCarrito('mora', 12500)">Agregar al carrito</button>
+            <!-- Aquí puedes agregar imágenes de los productos -->
+          </div>
+        </div>
+        <div class="producto">
+          <img src=arequipekiwi.jpg alt="Producto">
+          <div>
+            <h3>arequipe y kiwi</h3>
+            <p>Precio: $14000</p>
+            <!-- Aquí puedes modificar el precio del producto si es necesario -->
+            <button onclick="agregarAlCarrito('arequipe y kiwi', 14000)">Agregar al carrito</button>
+            <!-- Aquí puedes agregar imágenes de los productos -->
+          </div>
+        </div>
+        <div class="producto">
+          <img src=coco.jpg alt="Producto">
+          <div>
+            <h3>coco</h3>
+            <p>Precio: $12500</p>
+            <!-- Aquí puedes modificar el precio del producto si es necesario -->
+            <button onclick="agregarAlCarrito('coco', 12500)">Agregar al carrito</button>
+            <!-- Aquí puedes agregar imágenes de los productos -->
+          </div>
+        </div>
+        <div class="producto">
+          <img src=cocomelo.jpg alt="Producto">
+          <div>
+            <h3>coco y melocoton</h3>
+            <p>Precio: $12500</p>
+            <!-- Aquí puedes modificar el precio del producto si es necesario -->
+            <button onclick="agregarAlCarrito('coco y melocoton', 12500)">Agregar al carrito</button>
+            <!-- Aquí puedes agregar imágenes de los productos -->
+          </div>
+        </div>
+        <div class="producto">
+          <img src=fresa.jpg alt="Producto">
+          <div>
+            <h3>fresa</h3>
+            <p>Precio: $12500</p>
+            <!-- Aquí puedes modificar el precio del producto si es necesario -->
+            <button onclick="agregarAlCarrito('fresa', 12500)">Agregar al carrito</button>
+            <!-- Aquí puedes agregar imágenes de los productos -->
+          </div>
+        </div>
+        <div class="producto">
+          <img src=fresaarequipe.jpg alt="Producto">
+          <div>
+            <h3>fresa y arequipe</h3>
+            <p>Precio: $12500</p>
+            <!-- Aquí puedes modificar el precio del producto si es necesario -->
+            <button onclick="agregarAlCarrito('fresa y arequipe', 12500)">Agregar al carrito</button>
+            <!-- Aquí puedes agregar imágenes de los productos -->
+          </div>
+        </div>
+        <div class="producto">
+          <img src=fresamelo.jpg alt="Producto">
+          <div>
+            <h3>fresa y melocoton</h3>
+            <p>Precio: $12500</p>
+            <!-- Aquí puedes modificar el precio del producto si es necesario -->
+            <button onclick="agregarAlCarrito('fresa y melocoton', 12500)">Agregar al carrito</button>
+            <!-- Aquí puedes agregar imágenes de los productos -->
+          </div>
+        </div>
+        <div class="producto">
+          <img src=kiwi.jpg alt="Producto">
+          <div>
+            <h3>kiwi</h3>
+            <p>Precio: $13000</p>
+            <!-- Aquí puedes modificar el precio del producto si es necesario -->
+            <button onclick="agregarAlCarrito('kiwi', 13000)">Agregar al carrito</button>
+            <!-- Aquí puedes agregar imágenes de los productos -->
+          </div>
+        </div>
+        <div class="producto">
+          <img src=maracumelon.jpg alt="Producto">
+          <div>
+            <h3>maracuya y melocoton</h3>
+            <p>Precio: $12500</p>
+            <!-- Aquí puedes modificar el precio del producto si es necesario -->
+            <button onclick="agregarAlCarrito('maracuya y melocoton', 12500)">Agregar al carrito</button>
+            <!-- Aquí puedes agregar imágenes de los productos -->
+          </div>
+        </div>
+        <div class="producto">
+          <img src=kiwiguanabana.jpg alt="Producto">
+          <div>
+            <h3>kiwi y guanabana</h3>
+            <p>Precio: $14500</p>
+            <!-- Aquí puedes modificar el precio del producto si es necesario -->
+            <button onclick="agregarAlCarrito('kiwi y guanabana', 14500)">Agregar al carrito</button>
+            <!-- Aquí puedes agregar imágenes de los productos -->
+          </div>
+        </div>
+        <div class="producto">
+          <img src=kiwimelo.jpg alt="Producto">
+          <div>
+            <h3>kiwi y melocoton</h3>
+            <p>Precio: $14500</p>
+            <!-- Aquí puedes modificar el precio del producto si es necesario -->
+            <button onclick="agregarAlCarrito('kiwi y melocoton', 14500)">Agregar al carrito</button>
+            <!-- Aquí puedes agregar imágenes de los productos -->
+          </div>
+        </div>
+        <div class="producto">
+          <img src=maracuya.jpg alt="Producto">
+          <div>
+            <h3>maracuya</h3>
+            <p>Precio: $12500</p>
+            <!-- Aquí puedes modificar el precio del producto si es necesario -->
+            <button onclick="agregarAlCarrito('maracuya', 12500)">Agregar al carrito</button>
+            <!-- Aquí puedes agregar imágenes de los productos -->
+          </div>
+        </div>
+        <div class="producto">
+          <img src=maracuyafresa.jpg alt="Producto">
+          <div>
+            <h3>maracuya y fresa</h3>
+            <p>Precio: $12500</p>
+            <!-- Aquí puedes modificar el precio del producto si es necesario -->
+            <button onclick="agregarAlCarrito('maracuya y fresa', 12500)">Agregar al carrito</button>
+            <!-- Aquí puedes agregar imágenes de los productos -->
+          </div>
+        </div>
+        <div class="producto">
+          <img src=maracuyakiwi.jpg alt="Producto">
+          <div>
+            <h3>maracuya y kiwi</h3>
+            <p>Precio: $14500</p>
+            <!-- Aquí puedes modificar el precio del producto si es necesario -->
+            <button onclick="agregarAlCarrito('maracuya y kiwi', 14500)">Agregar al carrito</button>
+            <!-- Aquí puedes agregar imágenes de los productos -->
+          </div>
+        </div>
+        <div class="producto">
+          <img src=maracuyamora.jpg alt="Producto">
+          <div>
+            <h3>maracuya y mora</h3>
+            <p>Precio: $12500</p>
+            <!-- Aquí puedes modificar el precio del producto si es necesario -->
+            <button onclick="agregarAlCarrito('maracuya y mora', 12500)">Agregar al carrito</button>
+            <!-- Aquí puedes agregar imágenes de los productos -->
+          </div>
+        </div>
+        <div class="producto">
+          <img src=melocoton.jpg alt="Producto">
+          <div>
+            <h3>melocoton</h3>
+            <p>Precio: $12500</p>
+            <!-- Aquí puedes modificar el precio del producto si es necesario -->
+            <button onclick="agregarAlCarrito('melocoton', 12500)">Agregar al carrito</button>
+            <!-- Aquí puedes agregar imágenes de los productos -->
+          </div>
+        </div>
+        <div class="producto">
+          <img src=piña.jpg alt="Producto">
+          <div>
+            <h3>piña</h3>
+            <p>Precio: $12500</p>
+            <!-- Aquí puedes modificar el precio del producto si es necesario -->
+            <button onclick="agregarAlCarrito('piña', 12500)">Agregar al carrito</button>
+            <!-- Aquí puedes agregar imágenes de los productos -->
+          </div>
+        </div>
+        <div class="producto">
+          <img src=piñacoco.jpg alt="Producto">
+          <div>
+            <h3>piña y coco</h3>
+            <p>Precio: $12500</p>
+            <!-- Aquí puedes modificar el precio del producto si es necesario -->
+            <button onclick="agregarAlCarrito('piña y coco', 12500)">Agregar al carrito</button>
+            <!-- Aquí puedes agregar imágenes de los productos -->
+          </div>
+        </div>
+        <div class="producto">
+          <img src=piñafresa.jpg alt="Producto">
+          <div>
+            <h3>piña y fresa</h3>
+            <p>Precio: $12500</p>
+            <!-- Aquí puedes modificar el precio del producto si es necesario -->
+            <button onclick="agregarAlCarrito('Piña y fresa', 12500)">Agregar al carrito</button>
+            <!-- Aquí puedes agregar imágenes de los productos -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="nosotros">
+      <img src=logo.png alt="Logo" class="logo-seccion">
+      <div class="seccion-content">
+        <h2>Nosotros</h2>
+        <div class="nosotros-content">
+          <div>
+            <img src=analisiss.png alt="Infografía">
+            <!-- Aquí puedes agregar una infografía de la cafetería -->
+          </div>
+          <div class="nosotros-text">
+            <p>En yogures deliciosos, creemos que lo natural es lo mejor. Nacimos con la pasión de ofrecer yogures
+
+artesanales, elaborados con ingredientes frescos y de la más alta calidad. Cada uno de nuestros
+
+productos es cuidadosamente preparado para brindarte un sabor auténtico, nutritivo y delicioso.
+
+Nuestro compromiso es llevar bienestar a tu mesa, con recetas que combinan tradición e innovación.
+
+Sin conservantes artificiales ni aditivos innecesarios, solo el equilibrio perfecto entre salud y placer.
+
+Acompáñanos en este viaje hacia una alimentación más natural, en donde cada cucharada es un
+
+momento para disfrutar.</p>
+            <audio id="audio-nosotros" src=audio.mp3></audio>
+            <button onclick="document.getElementById('audio-nosotros').play()">▶ Escuchar audio</button>
+            <!-- Aquí puedes agregar un audio para que los usuarios lo escuchen -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contacto">
+      <img src=logo.png alt="Logo" class="logo-seccion">
+      <div class="seccion-content">
+        <h2>Contacto</h2>
+        <p>Escríbenos tus sugerencias o preguntas a través de WhatsApp:</p>
+        <form id="contact-form" class="contact-form">
+          <label for="nombre">Nombre:</label>
+          <input type="text" id="nombre" name="nombre" required><br><br>
+          <label for="mensaje">Mensaje:</label><br>
+          <textarea id="mensaje" name="mensaje" rows="4" cols="50" required></textarea><br><br>
+          <button type="submit">Enviar Mensaje</button>
+        </form>
+
+        <div id="mural">
+          <h3>Mural de mensajes</h3>
+          <textarea id="comentario-input" placeholder="Escribe tu comentario aquí..."></textarea><br>
+          <button onclick="agregarComentario()">Agregar Comentario</button>
+          <div id="lista-mensajes"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="carrito">
+      <img src=logo.png alt="Logo" class="logo-seccion">
+      <div class="seccion-content">
+        <h2>Carrito</h2>
+        <div id="lista-carrito"></div>
+        <div class="total" id="total-carrito"></div>
+        <button onclick="enviarWhatsApp()">Comprar por WhatsApp</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Cafetería. Todos los derechos reservados.</p>
+  </footer>
+
+  <script>
+    document.getElementById("menu-toggle").addEventListener("click", function() {
+      document.getElementById("sidebar").classList.toggle("show");
+    });
+
+    document.getElementById("contact-form").addEventListener("submit", function(event) {
+      event.preventDefault();
+      const nombre = document.getElementById("nombre").value;
+      const mensaje = document.getElementById("mensaje").value;
+      const mensajeWhatsApp = `*Nombre:* ${nombre}\n*Mensaje:* ${mensaje}`;
+      const urlWhatsApp = `https://wa.me/573238065192?text=${encodeURIComponent(mensajeWhatsApp)}`;
+      window.open(urlWhatsApp, '_blank');
+      
+      // Añadir mensaje al mural
+      const mural = document.getElementById("lista-mensajes");
+      const nuevoMensaje = document.createElement("div");
+      nuevoMensaje.className = "mensaje-item";
+      nuevoMensaje.textContent = `${nombre}: ${mensaje}`;
+      mural.prepend(nuevoMensaje);
+      
+      document.getElementById("contact-form").reset();
+    });
+
+    const carrito = {};
+    const imagenesCarrusel = [
+      'https://via.placeholder.com/800x300?text=Imagen+1',
+      'https://via.placeholder.com/800x300?text=Imagen+2',
+      'https://via.placeholder.com/800x300?text=Imagen+3'
+    ];
+    let indexCarrusel = 0;
+
+    function mostrarSeccion(id) {
+      document.querySelectorAll('main section').forEach(sec => sec.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function agregarAlCarrito(nombre, precio) {
+      if (!carrito[nombre]) {
+        carrito[nombre] = { cantidad: 0, precio: precio };
+      }
+      carrito[nombre].cantidad++;
+      actualizarCarrito();
+    }
+
+    function cambiarCantidad(nombre, delta) {
+      if (carrito[nombre]) {
+        carrito[nombre].cantidad += delta;
+        if (carrito[nombre].cantidad <= 0) delete carrito[nombre];
+        actualizarCarrito();
+      }
+    }
+
+    function actualizarCarrito() {
+      const lista = document.getElementById('lista-carrito');
+      const total = document.getElementById('total-carrito');
+      lista.innerHTML = '';
+      let totalGeneral = 0;
+
+      for (let nombre in carrito) {
+        const item = carrito[nombre];
+        const totalItem = item.precio * item.cantidad;
+        totalGeneral += totalItem;
+
+        lista.innerHTML += ` 
+          <div class="carrito-item">
+            <span>${nombre} (x${item.cantidad})</span>
+            <span>
+              $${totalItem.toFixed(2)}
+              <button onclick="cambiarCantidad('${nombre}', 1)">+</button>
+              <button onclick="cambiarCantidad('${nombre}', -1)">-</button>
+            </span>
+          </div>`;
+      }
+
+      total.textContent = `Total: $${totalGeneral.toFixed(2)}`;
+    }
+
+    function enviarWhatsApp() {
+      let mensaje = "Hola, quiero comprar:\n";
+      for (let nombre in carrito) {
+        const item = carrito[nombre];
+        mensaje += `${nombre} (x${item.cantidad})\n`;
+      }
+      const url = `https://wa.me/573238065192?text=${encodeURIComponent(mensaje)}`;
+      window.open(url, '_blank');
+    }
+
+    function cambiarImagenCarrusel() {
+      indexCarrusel = (indexCarrusel + 1) % imagenesCarrusel.length;
+      document.getElementById("carousel-img").src = imagenesCarrusel[indexCarrusel];
+    }
+
+    setInterval(cambiarImagenCarrusel, 5000);
+
+    function agregarComentario() {
+      const comentario = document.getElementById("comentario-input").value;
+      if (comentario.trim() !== "") {
+        const mural = document.getElementById("lista-mensajes");
+        const nuevoComentario = document.createElement("div");
+        nuevoComentario.className = "mensaje-item";
+        nuevoComentario.textContent = comentario;
+        mural.prepend(nuevoComentario);
+        document.getElementById("comentario-input").value = ""; // Limpiar el input
+      }
+    }
+  </script>
+</body>
+</html>
