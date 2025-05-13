@@ -1,6 +1,46 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <style> 
+  /* Fresas que caen desde arriba */
+#falling-strawberries {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2; /* Encima del fondo, detrás del contenido principal */
+}
+
+.falling-strawberry {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+
+  /* Usa la misma imagen */
+  background-image: url('fresaa.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+
+  animation: fall 10s linear infinite;
+  opacity: 0.8;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-10vh);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh);
+    opacity: 0;
+  }
+}
+  </style>
   <style>
     /* Fondo de fresas animadas */
 #background-animation {
@@ -250,6 +290,7 @@
 </head>
 <body>
   <div id="background-animation"></div>
+  <div id="falling-strawberries"></div>
   <button id="menu-toggle">☰</button>
 
   <header id="sidebar">
@@ -684,6 +725,31 @@ momento para disfrutar.</p>
 
   // Crear fresas cada 500ms
   setInterval(createStrawberry, 500);
+</script>
+  <script>
+  const fallContainer = document.getElementById('falling-strawberries');
+
+  function createFallingStrawberry() {
+    const strawberry = document.createElement('div');
+    strawberry.classList.add('falling-strawberry');
+
+    // Posición horizontal aleatoria
+    strawberry.style.left = Math.random() * window.innerWidth + 'px';
+
+    // Escala aleatoria
+    const scale = 0.5 + Math.random();
+    strawberry.style.transform = `scale(${scale})`;
+
+    fallContainer.appendChild(strawberry);
+
+    // Eliminar después de 10s
+    setTimeout(() => {
+      strawberry.remove();
+    }, 10000);
+  }
+
+  // Crear fresas descendentes cada 800ms
+  setInterval(createFallingStrawberry, 800);
 </script>
 </body>
 </html>
