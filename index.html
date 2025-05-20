@@ -1,6 +1,55 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <!-- Sección del footer -->
+  <style>
+.footer {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  padding: 40px 0;
+  font-family: Arial, sans-serif;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: auto;
+  padding: 0 20px;
+}
+
+.inicio h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.inicio p {
+  margin: 8px 0 0;
+  font-size: 14px;
+  color: #cccccc;
+}
+
+.productos a,
+.contacto a {
+  color: #ffffff;
+  text-decoration: none;
+  margin-right: 15px;
+  font-size: 14px;
+}
+
+.productos a:hover,
+.contacto a:hover {
+  text-decoration: underline;
+}
+
+.contacto img {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+}
+</style>
+  <!-- Sección del footer -->
   <style> 
   /* Fresas que caen desde arriba */
 #falling-strawberries {
@@ -307,7 +356,7 @@
     <section id="inicio" class="active">
       <img src=logo.png alt="Logo" class="logo-seccion">
       <div class="seccion-content">
-        <h2>Inicio</h2>
+        <h2>postres deliciosos</h2>
         <p>Bienvenido a nuestra tienda virtual.</p>
         <p>Muchas gracias por escogernos a nosotros,disfruta de nuestra increible cantidad de postres super deliciosos.</p>
         <p>Al momento de realizar la compra de su producto,para la confirmacion de los postres que desea se abrira automaticamente un chat de WhatsApp con la informacion de todo lo que selecciono en su compra.</p>
@@ -586,9 +635,26 @@
     </section>
   </main>
 
-  <footer>
-    <p>&copy; 2025 postres deliciosos. Todos los derechos reservados.</p>
-  </footer>
+<footer class="footer">
+  <div class="footer-container">
+    <div class="inicio">
+      <h2>postres deliciosos</h2>
+      <p>&copy; 2025 postres deliciosos. Todos los derechos reservados.</p>
+    </div>
+    <div class="productos">
+      <a href="#inicio">Inicio</a>
+      <a href="#productos">Productos</a>
+      <a href="#nosotros">Nosotros</a>
+      <a href="#contacto">Contacto</a>
+      <a href="#carrito">Carrito</a>
+    </div>
+    <div class="contacto">
+      <a href="#"><img src="facebook-icon.svg" alt="Facebook"></a>
+      <a href="#"><img src="twitter-icon.svg" alt="Twitter"></a>
+      <a href="#"><img src="instagram-icon.svg" alt="Instagram"></a>
+    </div>
+  </div>
+</footer>
 
   <script>
     document.getElementById("menu-toggle").addEventListener("click", function() {
