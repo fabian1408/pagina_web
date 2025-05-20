@@ -10,7 +10,7 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 0; /* Encima del fondo, detrás del contenido principal */
+  z-index: 0.5; /* Encima del fondo, detrás del contenido principal */
 }
 
 .falling-strawberry {
@@ -536,20 +536,11 @@
             <img src=analisiss.png alt="Infografía">
             <!-- Aquí puedes agregar una infografía de la cafetería -->
           </div>
-          <div class="nosotros-text">
-            <p>En yogures deliciosos, creemos que lo natural es lo mejor. Nacimos con la pasión de ofrecer yogures
-
-artesanales, elaborados con ingredientes frescos y de la más alta calidad. Cada uno de nuestros
-
-productos es cuidadosamente preparado para brindarte un sabor auténtico, nutritivo y delicioso.
-
-Nuestro compromiso es llevar bienestar a tu mesa, con recetas que combinan tradición e innovación.
-
-Sin conservantes artificiales ni aditivos innecesarios, solo el equilibrio perfecto entre salud y placer.
-
-Acompáñanos en este viaje hacia una alimentación más natural, en donde cada cucharada es un
-
-momento para disfrutar.</p>
+          <div class="nosotros-video">
+          <video width="640" height="360" controls>
+           <source src="yogurt.mp4" type="video/mp4">
+               Tu navegador no soporta la etiqueta de video.
+          </video>
             <audio id="audio-nosotros" src=audio.mp3></audio>
             <button onclick="document.getElementById('audio-nosotros').play()">▶ Escuchar audio</button>
             <!-- Aquí puedes agregar un audio para que los usuarios lo escuchen -->
